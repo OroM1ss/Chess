@@ -3,10 +3,9 @@ let create_game = function () {
     for (let i = 0; i < 8; i++) {
         arr[i] = new Array(8);
     }
-
     for (let n = 0; n < 8; n++) {
         arr[1][n] = "BP";
-        arr[6][n] = "WP"; //WP = WHITE PAWN
+        arr[6][n] = "WP"; 
     }
     arr[0][0] = "BR";
     arr[0][7] = "BR";
@@ -26,108 +25,6 @@ let create_game = function () {
     arr[7][4] = "WK";
     arr[7][3] = "WQ";
 
-    return arr;
-}
-
-
-
-let create_game_pawn = function () {
-    let arr = [];
-    for (let i = 0; i < 8; i++) {
-        arr[i] = new Array(8);
-    }
-    arr[7][3] = "WP";
-    arr[6][2] = "BP";
-    arr[5][2] = "BP";
-    arr[5][1] = "BP";
-    arr[6][4] = "BP";
-    arr[6][3] = "WP";
-    arr[1][2] = "BP";
-    arr[7][0] = "BP";
-    arr[5][3] = "BP";
-    arr[0][0] = "BR";
-    return arr;
-}
-
-
-let create_game_rook = function () {
-    let arr = [];
-    for (let i = 0; i < 8; i++) {
-        arr[i] = new Array(8);
-    }
-    arr[3][3] = "WR";
-    arr[3][6] = "BP";
-    arr[6][3] = "WP";
-    arr[6][6] = "BR";
-    arr[2][2] = "BQ";
-    arr[1][1] = "WB";
-    arr[0][0] = "BN";
-    arr[2][3] = "BK";
-    return arr;
-}
-
-let create_game = function () {
-    let arr = [];
-    for (let i = 0; i < 8; i++) {
-        arr[i] = new Array(8);
-    }
-
-    for (let n = 0; n < 8; n++) {
-        arr[1][n] = "BP";
-        arr[6][n] = "WP";
-    }
-    arr[0][0] = "BR";
-    arr[0][7] = "BR";
-    arr[0][4] = "BK";
-    arr[0][3] = "BQ";
-    arr[0][2] = "BB";
-    arr[0][5] = "BB";
-    arr[0][1] = "BN";
-    arr[0][6] = "BN";
-
-    arr[7][0] = "WR";
-    arr[7][7] = "WR";
-    arr[7][1] = "WN";
-    arr[7][6] = "WN";
-    arr[7][2] = "WB";
-    arr[7][5] = "WB";
-    arr[7][4] = "WK";
-    arr[7][3] = "WQ";
-
-    return arr;
-}
-
-let create_game_pawn = function () {
-    let arr = [];
-    for (let i = 0; i < 8; i++) {
-        arr[i] = new Array(8);
-    }
-    arr[7][3] = "WP";
-    arr[6][2] = "BP";
-    arr[5][2] = "BP";
-    arr[5][1] = "BP";
-    arr[6][4] = "BP";
-    arr[6][3] = "WP";
-    arr[1][2] = "BP";
-    arr[7][0] = "BP";
-    arr[5][3] = "BP";
-    arr[0][0] = "BR";
-    return arr;
-}
-
-let create_game_rook = function () {
-    let arr = [];
-    for (let i = 0; i < 8; i++) {
-        arr[i] = new Array(8);
-    }
-    arr[3][3] = "WR";
-    arr[3][6] = "BP";
-    arr[6][3] = "WP";
-    arr[6][6] = "BR";
-    arr[2][2] = "BQ";
-    arr[1][1] = "WB";
-    arr[0][0] = "BN";
-    arr[2][3] = "BK";
     return arr;
 }
 
