@@ -7,24 +7,27 @@ let create_game = function () {
         arr[1][n] = "BP";
         arr[6][n] = "WP"; 
     }
+
+    //BLACK SIDE
     arr[0][0] = "BR";
     arr[0][7] = "BR";
-    arr[0][4] = "BK";
-    arr[0][3] = "BQ";
-    arr[0][2] = "BB";
-    arr[0][5] = "BB";
     arr[0][1] = "BN";
     arr[0][6] = "BN";
-
+    arr[0][2] = "BB";
+    arr[0][5] = "BB";
+    arr[0][3] = "BQ";
+    arr[0][4] = "BK";
+    
+    //WHITE SIDE
     arr[7][0] = "WR";
     arr[7][7] = "WR";
     arr[7][1] = "WN";
     arr[7][6] = "WN";
     arr[7][2] = "WB";
     arr[7][5] = "WB";
-    arr[7][4] = "WK";
     arr[7][3] = "WQ";
-
+    arr[7][4] = "WK";
+    
     return arr;
 }
 
@@ -137,9 +140,9 @@ let pieces_moves = {
 
     next_move_pawn: function (y, x, primary_line, direction, opposite) {
         let ret = []
-        let y_new = y + 1 * direction;
+        let y_new = y + direction;
         let x_new = x;
-        if (y_new < 0) {
+        if (y_new < 0 || y_new >= 8) {
             return ret;
         }
         if (y === primary_line) {
@@ -205,7 +208,7 @@ let next_move = function (y, x) {
     return ret;
 }
 
-let chess_board = create_game_rook();
+let chess_board = create_game();
 
 let possible_attack = function (y, x, side, next_moves) {
     let candidate = chess_board[y][x];
