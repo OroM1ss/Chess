@@ -66,6 +66,10 @@ let create_game_rook = function () {
     return arr;
 }
 
+let move_pieces = {
+    
+}
+
 const __move_direction_line = function (ret, y, x, dy, dx, opposite) {
     y += dy;
     x += dx;
