@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+
+<script src="board.js"></script>
+
+<img id="img-blackpawn" style="display:none"
+    src="https://upload.wikimedia.org/wikipedia/commons/c/c7/Chess_pdt45.svg" />
+
+<img id="img-blackrook" style="display:none"
+    src="https://upload.wikimedia.org/wikipedia/commons/f/ff/Chess_rdt45.svg" />
+
+<img id="img-blackknight" style="display: none"
+    src="https://upload.wikimedia.org/wikipedia/commons/e/ef/Chess_ndt45.svg" />
+
+<img id="img-blackbishop" style="display:none"
+    src="https://upload.wikimedia.org/wikipedia/commons/9/98/Chess_bdt45.svg" />
+
+<img id="img-blackqueen" style="display:none"
+    src="https://upload.wikimedia.org/wikipedia/commons/4/47/Chess_qdt45.svg" />
+
+<img id="img-blackking" style="display:none"
+    src="https://upload.wikimedia.org/wikipedia/commons/f/f0/Chess_kdt45.svg" />
+
+
+<img id="img-whiteking" style="display:none"
+    src="https://upload.wikimedia.org/wikipedia/commons/4/42/Chess_klt45.svg" />
+
+<img id="img-whitequeen" style="display:none"
+    src="https://upload.wikimedia.org/wikipedia/commons/1/15/Chess_qlt45.svg" />
+
+<img id="img-whiterook" style="display:none"
+    src="https://upload.wikimedia.org/wikipedia/commons/7/72/Chess_rlt45.svg" />
+
+<img id="img-whitebishop" style="display:none"
+    src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Chess_blt45.svg" />
+
+<img id="img-whiteknight" style="display:none"
+    src="https://upload.wikimedia.org/wikipedia/commons/7/70/Chess_nlt45.svg" />
+
+<img id="img-whitepawn" style="display:none"
+    src="https://upload.wikimedia.org/wikipedia/commons/4/45/Chess_plt45.svg" />
+
+
+<canvas id="pol"></canvas>
+
+<script>
+    const holst = document.getElementById("pol");
+    holst.width = window.innerWidth - 20;
+    holst.height = window.innerHeight - 20;
+    const ctx = holst.getContext('2d');
+    ctx.imageSmoothingEnabled = false;
+    const BLACK_KNIGHT = document.getElementById("img-blackknight")
+    const BLACK_BISHOP = document.getElementById("img-blackbishop")
+    const BLACK_QUEEN = document.getElementById("img-blackqueen")
+    const BLACK_KING = document.getElementById("img-blackking")
+    const BLACK_PAWN = document.getElementById("img-blackpawn");
+    const BLACK_ROOK = document.getElementById("img-blackrook");
+    const WHITE_PAWN = document.getElementById("img-whitepawn");
+    const WHITE_KNIGHT = document.getElementById("img-whiteknight")
+    const WHITE_BISHOP = document.getElementById("img-whitebishop")
+    const WHITE_ROOK = document.getElementById("img-whiterook")
+    const WHITE_QUEEN = document.getElementById("img-whitequeen")
+    const WHITE_KING = document.getElementById("img-whiteking")
+
+    let CURRENT_FIGURE = undefined;
+
+    const WHITE = "rgb(240,217,181)";
+    const cellWidth = 50;
+    const cellHeight = 50;
+    const BLACK = "rgb(181,136,99)";
+
+    let draw_screen = function () {
+
+        clear_screen();
+
+        draw_chess_board();
+
+        draw_game_state();
+
+        draw_current_figure();
+    };
+
+    let draw_current_figure = function () {
+        if (CURRENT_FIGURE === undefined)
+            return;
+
+        boardY = CURRENT_FIGURE[0];
+        boardX = CURRENT_FIGURE[1];
+        let [screenX, screenY] = into_screen(boardX, boardY);
+        console.log(boardX, boardY, screenX, screenY);
+        drawCircle(screenX, screenY, 20, "red");
+        let moves = next_move(boardY, boardX);
+        console.log(moves)
+        for (i in moves) {
+            let element = moves[i];
+            let [X, Y] = into_screen(element[1], element[0])
+            drawCircle(X, Y, 20, "green");
+        }
+    }
+
+    let clear_screen = function () {
+        ctx.fillStyle = "white";
+        ctx.fillRect(0, 0, holst.width, holst.height);
+    }
+
+    let draw_game_state = function () {
+        for (let row = 0; row < 8; row++) {
+            for (let column = 0; column < 8; column++) {
+                let cell = chess_board[row][column];
+                draw_cell(row, column, cell);
+            }
+        }
+    }
+
+    let draw_cell = function (row, column, cell) {
+        if (cell === undefined) {
+            return;
+        }
+        const F_MAPPING = {
+            "BP": BLACK_PAWN,
+            "BR": BLACK_ROOK,
+            "BK": BLACK_KING,
+            "BQ": BLACK_QUEEN,
+            "BB": BLACK_BISHOP,
+            "BN": BLACK_KNIGHT,
+
+            "WP": WHITE_PAWN,
+            "WR": WHITE_ROOK,
+            "WK": WHITE_KING,
+            "WQ": WHITE_QUEEN,
+            "WB": WHITE_BISHOP,
+            "WN": WHITE_KNIGHT,
+        };
+
+        const img = F_MAPPING[cell];
+
+        const x = cellWidth * column;
+        const y = cellHeight * row;
+
+        const offset_x = (cellWidth - img.width) / 2;
+        const offset_y = (cellHeight - img.height) / 2;
+
+        ctx.drawImage(img, offset_x + x, offset_y + y);
+    }
+
+    let draw_chess_board = function () {
+        for (let row = 0; row < 8; row++) {
+            for (let column = 0; column < 8; column++) {
+                if ((row + column) % 2 != 0) {
+                    ctx.fillStyle = BLACK;
+                }
+                else {
+                    ctx.fillStyle = WHITE;
+                }
+                ctx.fillRect(column * cellWidth, row * cellHeight, cellWidth, cellHeight);
+            }
+        }
+    }
+
+    let drawCircle = function (x, y, r, color) {
+        ctx.beginPath();
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 5;
+        ctx.arc(x, y, r, 0, 2 * Math.PI, false);
+        ctx.stroke();
+        ctx.closePath();
+    }
+
+    let into_board = function (y, x) {
+        return [Math.floor(y / cellHeight), Math.floor(x / cellWidth)];
+    }
+
+    let into_screen = function (a, b) {
+        return [a * cellWidth + 0.5 * cellWidth, b * cellHeight + 0.5 * cellHeight];
+    }
+    let perform_move = function (pos_from, pos_to) {
+        let pos_1_y = pos_from[0]
+        let pos_1_x = pos_from[1]
+        let pos_2_y = pos_to[0]
+        let pos_2_x = pos_to[1]
+
+        chess_board[pos_2_y][pos_2_x] = chess_board[pos_1_y][pos_1_x]
+        chess_board[pos_1_y][pos_1_x] = undefined
+
+        console.log(123)
+    };
+
+    let clear_selection = function () {
+        CURRENT_FIGURE = undefined;
+    }
+
+    let handle_click = function (ev) {
+        console.log(ev);
+        let [boardY, boardX] = into_board(ev.clientY, ev.clientX);
+        if (CURRENT_FIGURE === undefined) {
+            if (has_figure(boardY, boardX)) {
+                select_figure(boardY, boardX);
+            }
+        }
+
+        else {
+            let green_circle = next_move(CURRENT_FIGURE[0], CURRENT_FIGURE[1])
+            let found = pos_in_array(green_circle, boardY, boardX)
+            if (found != undefined) {
+                perform_move(CURRENT_FIGURE, found)
+                clear_selection();
+            }
+            else {
+                clear_selection()
+            }
+        }
+        draw_screen();
+    };
+
+    holst.addEventListener("click", handle_click);
+
+    const arraysEqual = (a, b) =>
+        a.length === b.length && a.every((val, index) => val === b[index]);
+    let pos_in_array = function (arr, row, column) {
+        let pos = [row, column]
+        for (let i = 0; i < arr.length; i++) {
+            let x = arr[i]
+            if (arraysEqual(x,pos)) {
+                return arr[i]
+            }
+        }
+        return undefined
+    }
+
+    const start = function () {
+        draw_screen();
+    };
+
+
+    start();
+    console.log(chess_board)
+</script>
